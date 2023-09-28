@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.FormControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-slot='control-panel-create-button']" position="after">
+           <t t-slot="control-panel-edit-button"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.FormView" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-set-slot='control-panel-create-button']" position="after">
+            <t t-set-slot="control-panel-edit-button">
+				<t t-if="!canEdit">
+                	<button type="button" class="btn btn-outline-primary" t-on-click.stop="edit"
+                            data-hotkey="e">Edit</button>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.FormStatusIndicator" t-inherit-mode="extension" owl="1">
+    	<xpath expr="//div[@t-att-class='{ o_form_status_indicator_new_record: props.model.root.isVirtual }']"
+               position="replace">
+			<div class="o_form_status_indicator ms-2 d-flex align-items-center"
+                 t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+				<div class="o_form_status_indicator_buttons d-flex">
+					<button
+                            type="button"
+                            class="o_form_button_save btn btn-outline-primary"
+                            t-att-disabled="props.isDisabled"
+                            data-hotkey="s"
+                            t-on-click.stop="save"
+                            data-tooltip="Save manually"
+                            aria-label="Save manually">
+						<i class="fa fa-cloud-upload fa-fw"/>Save manually
+					</button>
+                    <button
+                            type="button"
+                            class="o_form_button_cancel btn btn-outline-primary"
+                            t-att-disabled="props.isDisabled"
+                            data-hotkey="j"
+                            t-on-click.stop="discard"
+                            data-tooltip="Discard changes"
+                            aria-label="Discard changes">
+						<i class="fa fa-undo fa-fw"/>Discard changes
+					</button>
+				</div>
+                <span
+                        t-if="!props.model.root.isVirtual and indicatorMode === 'invalid'"
+                        class="text-danger ms-2"
+                        data-tooltip="Correct issues to save, or discard changes">
+					<i class="fa fa-warning"/>
+                    Unable to save
+				</span>
+			</div>
+		</xpath>
+    </t>
+
+</templates>

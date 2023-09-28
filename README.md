@@ -1,2 +1,2 @@
-# odoo-modules
-Some plugins for odoo
+# odoo modules
+###Form Control Panel
