@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
-import {useSetupView} from "@web/views/view_hook";
-import { pick } from "@web/core/utils/objects";
 import {patch} from "@web/core/utils/patch";
 import {FormController} from "@web/views/form/form_controller";
 
