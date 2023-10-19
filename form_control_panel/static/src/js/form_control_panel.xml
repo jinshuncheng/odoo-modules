@@ -1,59 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-inherit="web.FormControlPanel" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-slot='control-panel-create-button']" position="after">
-           <t t-slot="control-panel-edit-button"/>
-        </xpath>
+    <t t-name="form_control_panel.FormControlPanel" t-inherit="web.FormControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@t-ref='root']" position="replace">
+			<div class="o_control_panel" t-ref="root">
+				<div t-if="display['top']" class="o_cp_top">
+					<div class="o_cp_top_left w-auto d-flex flex-grow-1 align-items-center">
+						<t t-if="display['top-left']">
+							<t t-slot="control-panel-breadcrumb">
+								<t t-if="env.isSmall">
+									<t t-call="web.Breadcrumbs.Small" t-if="!env.config.noBreadcrumbs"/>
+								</t>
+                                <t t-else="">
+									<t t-call="web.Breadcrumbs" t-if="!env.config.noBreadcrumbs"/>
+								</t>
+							</t>
+						</t>
+
+						<div class="o_cp_bottom_left ">
+							<t t-slot="control-panel-create-button" />
+							<t t-slot="control-panel-edit-button"/>
+                            <t t-if="env.isSmall">
+								<t t-slot="control-panel-status-indicator"/>
+							</t>
+						</div>
+
+					</div>
+                    <div class="o_cp_bottom_right flex-shrink-0 justify-content-between align-items-center">
+						<t t-slot="control-panel-action-menu" t-if="display['bottom-left']"/>
+                        <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager" role="search">
+							<Pager t-props="pagerProps"/>
+						</div>
+					</div>
+
+				</div>
+			</div>
+	    </xpath>
     </t>
 
     <t t-inherit="web.FormView" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-set-slot='control-panel-create-button']" position="after">
             <t t-set-slot="control-panel-edit-button">
 				<t t-if="!canEdit">
-                	<button type="button" class="btn btn-outline-primary" t-on-click.stop="edit"
+                	<button type="button" class="btn btn-outline-primary o_form_button_create" t-on-click.stop="edit"
                             data-hotkey="e">Edit</button>
                 </t>
             </t>
         </xpath>
     </t>
 
-    <t t-inherit="web.FormStatusIndicator" t-inherit-mode="extension" owl="1">
-    	<xpath expr="//div[@t-att-class='{ o_form_status_indicator_new_record: props.model.root.isVirtual }']"
-               position="replace">
+	<t t-inherit="web.FormStatusIndicator" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[@t-att-class='{ o_form_status_indicator_new_record: props.model.root.isVirtual }']"
+			   position="replace">
 			<div class="o_form_status_indicator ms-2 d-flex align-items-center"
-                 t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
-				<div class="o_form_status_indicator_buttons d-flex">
+				 t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+				<div class="o_form_status_indicator_buttons d-flex o_save_and_discard">
 					<button
-                            type="button"
-                            class="o_form_button_save btn btn-outline-primary"
-                            t-att-disabled="props.isDisabled"
-                            data-hotkey="s"
-                            t-on-click.stop="save"
-                            data-tooltip="Save manually"
-                            aria-label="Save manually">
-						<i class="fa fa-cloud-upload fa-fw"/>Save manually
+							type="button"
+							class="o_form_button_save btn btn-outline-primary"
+							t-att-disabled="props.isDisabled"
+							data-hotkey="s"
+							t-on-click.stop="save"
+							data-tooltip="Save"
+							aria-label="Save">
+						<i class="fa fa-cloud-upload fa-fw"/>Save
 					</button>
-                    <button
-                            type="button"
-                            class="o_form_button_cancel btn btn-outline-primary"
-                            t-att-disabled="props.isDisabled"
-                            data-hotkey="j"
-                            t-on-click.stop="discard"
-                            data-tooltip="Discard changes"
-                            aria-label="Discard changes">
-						<i class="fa fa-undo fa-fw"/>Discard changes
+					<button
+							type="button"
+							class="o_form_button_cancel btn btn-outline-primary"
+							t-att-disabled="props.isDisabled"
+							data-hotkey="j"
+							t-on-click.stop="discard"
+							data-tooltip="Discard"
+							aria-label="Discard">
+						<i class="fa fa-undo fa-fw"/>Discard
 					</button>
 				</div>
-                <span
-                        t-if="!props.model.root.isVirtual and indicatorMode === 'invalid'"
-                        class="text-danger ms-2"
-                        data-tooltip="Correct issues to save, or discard changes">
+				<span
+						t-if="!props.model.root.isVirtual and indicatorMode === 'invalid'"
+						class="text-danger ms-2"
+						data-tooltip="Correct issues to save, or discard changes">
 					<i class="fa fa-warning"/>
-                    Unable to save
+					Unable to save
 				</span>
 			</div>
 		</xpath>
-    </t>
+	</t>
 
 </templates>

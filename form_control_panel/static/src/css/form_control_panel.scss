@@ -6,6 +6,16 @@
 .o_form_view.o_xxl_form_view .o_form_view_container {
   width: 100%;
 }
+
 .o_FormRenderer_chatterContainer.o-aside {
   width: 500px;
+}
+
+.breadcrumb-item + .breadcrumb-item {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.o_form_status_indicator .o_save_and_discard{
+  gap: 1rem 0.5rem;
 }

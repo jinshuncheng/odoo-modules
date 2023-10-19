@@ -6,14 +6,34 @@ import {FormController} from "@web/views/form/form_controller";
 
 patch(FormController.prototype, 'FormController', {
 
+    async create() {
+        this.canEdit = this.props.preventEdit;
+        this.canCreate = this.props.preventCreate;
+        await this.model.root.askChanges();
+        let canProceed = true;
+        if (this.model.root.isDirty) {
+            canProceed = await this.model.root.save({
+                stayInEdition: true,
+                useSaveErrorDialog: true,
+            });
+        }
+        if (canProceed) {
+            this.disableButtons();
+            await this.model.load({ resId: null });
+            this.enableButtons();
+        }
+    },
+
     async edit() {
         this.canEdit = this.props.preventEdit;
+        this.canCreate = this.props.preventCreate;
         await this.model.root.switchMode("edit");
     },
 
     async saveButtonClicked(params = {}) {
         await this.model.root.switchMode("readonly");
         this.canEdit = !this.props.preventEdit;
+        this.canCreate = !this.canCreate;
 
         this.disableButtons();
         const record = this.model.root;
@@ -35,6 +55,7 @@ patch(FormController.prototype, 'FormController', {
     async discard() {
         await this.model.root.switchMode("readonly");
         this.canEdit = !this.props.preventEdit;
+        this.canCreate = !this.canCreate;
 
         if (this.props.discardRecord) {
             this.props.discardRecord(this.model.root);
@@ -48,7 +69,6 @@ patch(FormController.prototype, 'FormController', {
             this.env.config.historyBack();
         }
     },
-
 
     async beforeLeave() {
         if (this.model.root.isDirty) {
