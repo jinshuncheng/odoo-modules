@@ -3,14 +3,24 @@
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {patch} from "@web/core/utils/patch";
 import {FormController} from "@web/views/form/form_controller";
+import { Component, onWillStart, useEffect, useRef, onRendered, onMounted } from "@odoo/owl";
 
 patch(FormController.prototype, 'FormController', {
 
     setup(){
         this._super();
+
         if (!this.props.resId){
             this.canCreate = this.props.preventCreate;
             this.canEdit = true;
+        }
+
+        if (["ir.actions.act_window", "ir.ui.view"].includes(this.props.resModel)){
+            onMounted(async () => {
+                this.canEdit = this.props.preventEdit;
+                this.canCreate = this.props.preventCreate;
+                await this.model.root.switchMode("edit");
+            });
         }
     },
 
