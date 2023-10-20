@@ -6,6 +6,14 @@ import {FormController} from "@web/views/form/form_controller";
 
 patch(FormController.prototype, 'FormController', {
 
+    setup(){
+        this._super();
+        if (!this.props.resId){
+            this.canCreate = this.props.preventCreate;
+            this.canEdit = true;
+        }
+    },
+
     async create() {
         this.canEdit = this.props.preventEdit;
         this.canCreate = this.props.preventCreate;
@@ -56,6 +64,7 @@ patch(FormController.prototype, 'FormController', {
         await this.model.root.switchMode("readonly");
         this.canEdit = !this.props.preventEdit;
         this.canCreate = !this.canCreate;
+
 
         if (this.props.discardRecord) {
             this.props.discardRecord(this.model.root);
